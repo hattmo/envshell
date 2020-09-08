@@ -1,4 +1,4 @@
-import { spawn as pty } from "node-pty-prebuilt-multiarch";
+import { spawn as pty } from "node-pty";
 import { Command } from "commander";
 import { homedir } from "os";
 import { join as p, sep } from "path";
