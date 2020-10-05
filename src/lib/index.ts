@@ -2,8 +2,9 @@ import { spawn as pty } from "node-pty";
 import { Command } from "commander";
 import { homedir } from "os";
 import { join as p, sep } from "path";
-import { stat, mkdir, writeFile, access, readFile } from "fs/promises";
+import { promises } from "fs";
 
+const { stat, mkdir, writeFile, access, readFile } = promises;
 const envshelldir = p(homedir(), ".envshell");
 const envshellconf = p(homedir(), ".envshell/conf.json");
 
