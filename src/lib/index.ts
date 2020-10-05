@@ -43,7 +43,7 @@ export default async () => {
   envshell.parse();
 };
 
-export const setupConfFolder = async () => {
+const setupConfFolder = async () => {
   try {
     const dirstat = await stat(envshelldir);
     if (dirstat.isDirectory()) {
@@ -62,7 +62,7 @@ export const setupConfFolder = async () => {
   }
 };
 
-export const getEnviron = (conf: Configuration, path: string): Environs => {
+const getEnviron = (conf: Configuration, path: string): Environs => {
   const pathParts = path.split(sep);
   return recurse(conf, pathParts);
 };
@@ -79,7 +79,7 @@ const recurse = (conf: Configuration, pathParts: string[]): Environs => {
   }
 };
 
-export const loadConf = async (): Promise<Configuration> => {
+const loadConf = async (): Promise<Configuration> => {
   try {
     const confData = await readFile(envshellconf);
     return JSON.parse(confData.toString("utf-8"));
@@ -89,7 +89,14 @@ export const loadConf = async (): Promise<Configuration> => {
   }
 };
 
-export const startShell = (env: Environs) => () => {
+const getShell = (): string => {
+  if (process.platform === "win32") {
+    return "powershell.exe";
+  }
+  return "/bin/bash";
+};
+
+const startShell = (env: Environs) => () => {
   if (process.env.envshell === "true") {
     console.log("You are already in an envshell...");
     process.exit();
@@ -113,7 +120,7 @@ export const startShell = (env: Environs) => () => {
     }, {});
   displayEnvVars(env);
   process.stdin.setRawMode(true);
-  const proc = pty("powershell.exe", [], {
+  const proc = pty(getShell(), [], {
     cols: process.stdout.columns,
     rows: process.stdout.rows,
     env: { ...process.env, ...mergeEnv, envshell: "true" },
@@ -143,7 +150,21 @@ export const startShell = (env: Environs) => () => {
   });
 };
 
-export const setEnvVar = (conf: Configuration, path: string) => async (
+const getValue = () =>
+  new Promise<string>((res, rej) => {
+    let value = "";
+    process.stdin.on("data", (data) => {
+      value += data.toString("utf-8");
+    });
+    process.stdin.on("end", () => {
+      res(value);
+    });
+    process.stdin.on("error", (err) => {
+      rej(err);
+    });
+  });
+
+const setEnvVar = (conf: Configuration, path: string) => async (
   variable: string,
   value: string
 ) => {
@@ -164,13 +185,13 @@ export const setEnvVar = (conf: Configuration, path: string) => async (
   }
 };
 
-export const listEnvVar = (env: Environs) => () => {
+const listEnvVar = (env: Environs) => () => {
   displayEnvVars(env);
   process.exit();
 };
 
-const displayEnvVars = (envs: Environs) => {
-  envs.forEach((item) => {
+const displayEnvVars = (env: Environs) => {
+  env.forEach((item) => {
     const env = item.env;
     if (env !== undefined) {
       console.log(item.path);
@@ -183,7 +204,7 @@ const displayEnvVars = (envs: Environs) => {
   });
 };
 
-export const clearEnvVar = (conf: Configuration, path: string) => async (
+const clearEnvVar = (conf: Configuration, path: string) => async (
   variable: string
 ) => {
   const subConf = conf[path];
@@ -205,17 +226,3 @@ export const clearEnvVar = (conf: Configuration, path: string) => async (
     process.exit();
   }
 };
-
-const getValue = () =>
-  new Promise<string>((res, rej) => {
-    let value = "";
-    process.stdin.on("data", (data) => {
-      value += data.toString("utf-8");
-    });
-    process.stdin.on("end", () => {
-      res(value);
-    });
-    process.stdin.on("error", (err) => {
-      rej(err);
-    });
-  });
