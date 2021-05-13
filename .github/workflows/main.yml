@@ -3,7 +3,7 @@ name: Test and Build
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   Test_and_Build:
