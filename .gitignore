@@ -2,3 +2,5 @@ node_modules/
 /dst/
 /static/
 /coverage/
+/.python-version
+/artifacts
