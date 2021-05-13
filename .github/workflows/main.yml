@@ -1,4 +1,4 @@
-name: Periodic Update
+name: Test and Build
 
 on:
   push:
