@@ -14,10 +14,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup Node
         uses: actions/setup-node@v2
-      - name: Install NCU
-        run: npm i -g npm-check-updates
       - name: Update Dependencies
-        run: ncu -u
+        run: npx npm-check-updates -u
       - name: Commit Changes
         uses: EndBug/add-and-commit@v7
         with:
