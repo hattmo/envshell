@@ -1,0 +1,24 @@
+name: Check Updates
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  Check_Updates:
+    name: Check Updates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+      - name: Install NCU
+        run: npm i npm-check-updates
+      - name: Update Dependencies
+        run: ncu -u
+      - name: Commit Changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: Updated Dependencies to new versions
