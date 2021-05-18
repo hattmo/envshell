@@ -16,6 +16,10 @@ jobs:
         uses: actions/setup-node@v2
       - name: Update Dependencies
         run: npx npm-check-updates -u
+      - name: Rebuild Package Lock
+        run: npm i --package-lock-only
+      - name: NPM Audit
+        run: npm audit fix --package-lock-only
       - name: Commit Changes
         uses: EndBug/add-and-commit@v7
         with:
