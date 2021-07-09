@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/commander": "^2.12.2",
     "@types/jest": "^26.0.24",
-    "@types/node": "^16.0.1",
+    "@types/node": "^16.0.3",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
     "eslint": "^7.30.0",
@@ -35,7 +35,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-react": "^7.24.0",
     "jest": "^27.0.6",
-    "nodemon": "^2.0.9",
+    "nodemon": "^2.0.10",
     "pkg": "^5.3.0",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.3",
